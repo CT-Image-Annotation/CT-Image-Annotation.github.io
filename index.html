@@ -1,3 +1,37 @@
 Hello,
 
-The website is hosted at <a href="http://172.21.197.219">server</a>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    The website is hosted <a href="http://172.21.197.219">here</a>
+  <script>
+    const timeout = 2000; // milliseconds
+
+    const testServer = (url) => {
+      return new Promise((resolve, reject) => {
+        fetch(url, { method: 'HEAD', mode: 'no-cors' })  // 'no-cors' for reachability
+          .then(() => resolve(url))
+          .catch(() => reject(url));
+
+        // Optional: add a timeout fallback
+        setTimeout(() => reject(url), timeout);
+      });
+    };
+
+    const localURL = 'http://172.21.197.219';  // Replace with actual local endpoint
+    const awsURL = 'http://ec2-52-59-144-62.eu-central-1.compute.amazonaws.com';  // Replace with actual AWS IP
+
+    // Try local first, then AWS
+    testServer(localURL)
+      .then(url => window.location.href = url)
+      .catch(() => testServer(awsURL)
+        .then(url => window.location.href = url)
+        .catch(() => {
+        }));
+  </script>
+</head>
+<body>
+  <p>Checking availability and redirecting...</p>
+</body>
+</html>
